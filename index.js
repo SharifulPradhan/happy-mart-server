@@ -36,7 +36,7 @@ client.connect(err => {
   // Load Product according to Product ID API
   app.get('/product/:id', (req, res) => {
     const id = ObjectID(req.params.id);
-    productsCollection.find({ _id: id})
+    productsCollection.find({ _id: id })
       .toArray((err, documents) => {
         res.send(documents[0])
       })
@@ -71,7 +71,7 @@ client.connect(err => {
 
   // api for load all the orders according to the loggedin Client
   app.get('/orders', (req, res) => {
-    ordersCollection.find({email: req.query.email})
+    ordersCollection.find({ email: req.query.email })
       .toArray((err, documents) => {
         res.send(documents)
       })
