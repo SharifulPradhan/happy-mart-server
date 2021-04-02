@@ -55,11 +55,18 @@ client.connect(err => {
       .then(documents => res.send(!!documents.value))
   })
 
-  app.post('/order', (req, res) => {
+  app.post('/checkOut', (req, res) => {
     const order = req.body;
     ordersCollection.insertOne(order)
       .then(result => {
         res.send(result.insertedCount > 0)
+      })
+  })
+
+  app.get('/orders', (req, res) => {
+    ordersCollection.find({email: req.query.email})
+      .toArray((err, documents) => {
+        res.send(documents)
       })
   })
 
