@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 require('dotenv').config()
+
 const port = process.env.PORT || 4200;
 
 
@@ -23,6 +24,8 @@ client.connect(err => {
   const ordersCollection = client.db(process.env.DB_NAME).collection("orders");
 
   console.log(err);
+
+  // full products database API
   app.get('/products', (req, res) => {
     productsCollection.find()
       .toArray((err, items) => {
@@ -30,6 +33,7 @@ client.connect(err => {
       })
   })
 
+  // Load Product according to Product ID API
   app.get('/product/:id', (req, res) => {
     const id = ObjectID(req.params.id);
     productsCollection.find({ _id: id})
@@ -38,6 +42,7 @@ client.connect(err => {
       })
   })
 
+  // API for add product to the Database
   app.post('/addProduct', (req, res) => {
     const newProduct = req.body;
     console.log('adding new product: ', newProduct)
@@ -47,7 +52,7 @@ client.connect(err => {
       })
   })
 
-
+  // API for delete a product
   app.delete('/deleteProduct/:id', (req, res) => {
     const id = ObjectID(req.params.id);
     console.log(id);
@@ -55,6 +60,7 @@ client.connect(err => {
       .then(documents => res.send(!!documents.value))
   })
 
+  // API for save client orders
   app.post('/checkOut', (req, res) => {
     const order = req.body;
     ordersCollection.insertOne(order)
@@ -63,6 +69,7 @@ client.connect(err => {
       })
   })
 
+  // api for load all the orders according to the loggedin Client
   app.get('/orders', (req, res) => {
     ordersCollection.find({email: req.query.email})
       .toArray((err, documents) => {
